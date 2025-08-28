@@ -1,4 +1,7 @@
 from fastapi import FastAPI
-from database import engine, sessionLocal, Base
 app = FastAPI()
+from routes import router
 
+
+
+app.include_router(router, prefix='/notes')
