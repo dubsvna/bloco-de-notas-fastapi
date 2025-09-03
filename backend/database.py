@@ -4,6 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 import os
 
+
 load_dotenv()
 db_host = os.getenv("PGHOST")
 db_port = os.getenv("PGPORT")
@@ -16,3 +17,10 @@ engine = create_engine(f'postgresql://{db_user}:{db_password}@{db_host}:{db_port
 Base = declarative_base()
 
 sessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+def get_db():
+    db = sessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

@@ -9,6 +9,10 @@ class NotaBase(BaseModel):
 class NotaCreate(NotaBase):
     pass  # Herda todos os campos como obrigatórios
 
+class NotasResponse(BaseModel):
+    id: int
+    created_at: datetime
+
 class Nota(NotaBase):
     id: int
     created_at: datetime
@@ -19,7 +23,7 @@ class Nota(NotaBase):
 
 class NotaUpdate(NotaBase):
     title: Optional[str] = None
-    description = Optional[str] = None
+    description: Optional[str] = None
 
     class Config:
         extra = 'forbid' #impede campos extra
