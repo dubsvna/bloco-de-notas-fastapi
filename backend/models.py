@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime
-from backend.database import Base
+from database import Base
 import datetime
 
 class Nota(Base):
@@ -7,4 +7,4 @@ class Nota(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(100), index=True)
     description = Column(Text)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.datetime.now())

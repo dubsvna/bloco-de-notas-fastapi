@@ -9,8 +9,10 @@ class NotaBase(BaseModel):
 class NotaCreate(NotaBase):
     pass  # Herda todos os campos como obrigatórios
 
-class NotasResponse(BaseModel):
+class NotaResponse(BaseModel):
     id: int
+    title: str
+    description: str
     created_at: datetime
 
 class Nota(NotaBase):
@@ -19,7 +21,6 @@ class Nota(NotaBase):
 
     class Config:
         from_attributes = True ## Isso permite que o Pydantic leia dados ORM
-
 
 class NotaUpdate(NotaBase):
     title: Optional[str] = None
