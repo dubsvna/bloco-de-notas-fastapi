@@ -24,7 +24,7 @@ export default function NotaBox() {
     return (
         <div className="flex gap-5 items-start">
         {mockNota.map((nota) => (
-            <div key={nota.id} className="flex flex-col wrap-pretty items-start h-30 border-1 w-50 max-w-70 text-xs gap-2">
+            <div key={nota.id} className="flex flex-col wrap-pretty items-start h-30  w-50 max-w-70 text-xs gap-2">
                 <p className="font-sans font-bold">{nota.title}</p>
                 <p className="font-sans">{nota.description}</p>
                 <p className="font-sans text-rose-300">{nota.created_at}</p>
