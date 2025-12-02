@@ -5,7 +5,7 @@ import {Textarea} from "@/components/ui/textarea";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 
-export default function NotaForm({nota}) {
+export default function NotaForm({nota, onSuccess}) {
     const [time, setTime] = useState(new Date());
     const [form, setForm] = useState({
         title: '',
@@ -130,6 +130,10 @@ const titles = [
                         title: "",
                         description: "",
                     })
+                }
+
+                if (onSuccess) {
+                    onSuccess();
                 }
             } else {
                 throw new Error('Erro ao salvar nota!');

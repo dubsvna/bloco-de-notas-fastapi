@@ -1,3 +1,7 @@
+import {Button} from "@/components/ui/button";
+import {Pencil, Plus} from "lucide-react";
+import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
+import EditNotePopup from "@/app/components/EditNotePopup";
 
 
 export default function NotaBox() {
@@ -64,13 +68,21 @@ export default function NotaBox() {
     }
 ]
     return (
-        <div className="grid grid-cols-4 gap-5 items-start border-1">
+        <div className="grid grid-cols-4 gap-4 items-start ">
         {mockNota.map((nota) => (
-            <div key={nota.id} className="flex flex-col wrap-pretty items-start h-30  w-40 max-w-70 text-xs gap-2 m-5">
-                <p className="font-sans font-bold">{nota.title}</p>
-                <p className="font-sans">{nota.description}</p>
-                <p className="font-sans text-rose-300">{nota.created_at}</p>
-            </div>
+                <Card key={nota.id} className='text-xs'>
+                    <CardHeader className='text-center'>
+                        <CardTitle>{nota.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p>{nota.description}</p>
+                    </CardContent>
+                    <CardFooter className="flex items-end justify-around gap-20">
+                        <p className="font-sans pt-2 pb-2 text-rose-300">{nota.created_at}</p>
+                           <EditNotePopup nota={nota}
+                                   />
+                    </CardFooter>
+                </Card>
             ))}
             </div>
     )
