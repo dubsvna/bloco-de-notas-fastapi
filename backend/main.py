@@ -1,13 +1,14 @@
 from fastapi import FastAPI
-from backend.database import engine, Base
+from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-Base.metadata.create_all(bind=engine)
-
-from backend.routes import router
+from routes import router
 app.include_router(router, prefix='/notes')
-
-@app.get("/")
-def root():
-    return {"message": "API do Bloco de Notas funcionando!"}

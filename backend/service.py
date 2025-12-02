@@ -1,13 +1,15 @@
 from sqlalchemy.orm import Session
-from . import models, schemas
+from datetime import datetime
+import models, schemas
 
 def get_notas(db:Session, skip: int = 0, limit: int = 100):
     return db.query(models.Nota).offset(skip).limit(limit).all()
 
-def create_notas(db:Session, nota: schemas.NotaCreate):
+def create_nota(db:Session, nota: schemas.NotaCreate):
     db_nota = models.Nota(
         title=nota.title,
-        description=nota.description
+        description=nota.description,
+        created_at=datetime.now()
     )
     db.add(db_nota)
     db.commit()
