@@ -5,17 +5,38 @@ import {Textarea} from "@/components/ui/textarea";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 
-export default function NotaForm({ nota}) {
+export default function NotaForm({nota}) {
     const [time, setTime] = useState(new Date());
-
+    const [form, setForm] = useState({
+        title: '',
+        description: '',
+    })
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [randomPlaceHolder, setRandomPlaceHolder] = useState({
+        title: "",
+        description: "",
+    });
     useEffect(() => {
-        const timerId = setInterval(() => tick(), 1000);
+        setRandomPlaceHolder({
+            title: alterTitle(),
+            description: alterDescription(),
+        })
+        const timerId = setInterval(() => {
+            setTime(new Date());
+        }, 1000);
         return () => {
             clearInterval(timerId);
-            alterDescription();
-            alterTitle();
         }
     }, []);
+
+    useEffect(() => {
+        if (nota) {
+            setForm({
+                title: nota.title,
+                description: nota.description,
+            })
+        }
+    }, [nota]);
 
     const tick = () => {
         setTime(new Date());
@@ -27,10 +48,10 @@ const titles = [
     "Titulo",
     "Sem título",
     "Untitled",
-    `Nota ${new Date().getDate()}/${new Date().getMonth() + 1}`,
+    `Nota ${new Date().getDate().toString()}/${(new Date().getMonth() + 1).toString()}`,
     "Rascunho",
     "Nova Anotação",
-    `📝 ${new Date().getHours()}h${new Date().getMinutes()}`,
+    `📝 ${new Date().getHours().toString()}h${new Date().getMinutes().toString()}`,
     "Temporário",
     "Borrador",
     `Documento ${Math.floor(Math.random() * 1000)}`,
@@ -81,14 +102,54 @@ const titles = [
         return `${frases[randomNumber]}`
     }
 
+    const handleChange = (e) => {
+        const { id, value } = e.target;
+        setForm(prev => ({
+            ...prev,
+            [id]: value
+        }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+
+        try {
+            const url = nota ? `http://127.0.0.1:8000/notes/${nota.id}` : 'http://127.0.0.1:8000/notes/create_nota';
+            const method = nota ? "PUT" : "POST";
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(form)
+            })
+            if (response.ok) {
+                if (!nota) {
+                    setForm({
+                        title: "",
+                        description: "",
+                    })
+                }
+            } else {
+                throw new Error('Erro ao salvar nota!');
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+        } finally {
+            setIsSubmitting(false);
+        }
+    }
+
     return (
 
             <div className ="w-full max-w-md">
+                <form onSubmit={handleSubmit}>
                 <FieldSet>
                     <FieldGroup>
                         <Field className='text-opacity-600'>
                             <FieldLabel htmlFor="title"> Titulo </FieldLabel>
-                            <Input id='title' type='text' placeholder={alterTitle()} className='text-opacity-600'/>
+                            <Input id='title' type='text' value={form.title} required onChange={handleChange} placeholder={randomPlaceHolder.title} className='text-opacity-600'/>
                         </Field>
 
                         <Field>
@@ -96,17 +157,22 @@ const titles = [
                                 Descrição
                             </FieldLabel>
                             <Textarea id='description'
-                                          placeholder={alterDescription()}
-                                          rows={5}
+                                      value={form.description}
+                                      onChange={handleChange}
+                                      placeholder={randomPlaceHolder.description}
+                                      rows={5}
                                       className='resize-none'
                                           />
                         </Field>
                         <div className="flex flex-row justify-between mt-1">
                             <p className='text-pink-300 mt-1'>{time.toLocaleTimeString()}</p>
-                            <Button variant="outline" aria-label="Submit">Button</Button>
+                            <Button type="submit" variant="outline" aria-label="Submit" disabled={isSubmitting}>
+                                {isSubmitting ? "Salvando..." : (nota ? "Atualizar" : "Criar Nota")}
+                            </Button>
                         </div>
                     </FieldGroup>
                 </FieldSet>
+                </form>
             </div>
     )
 }
