@@ -47,6 +47,13 @@ async function fetchWithTimeout(url, options = {}) {
   }
 }
 
+
+export const api = {
+  get: (url, options) => fetchWithTimeout(url, {method: 'GET', ...options}),
+  post: (url, data, options) => fetchWithTimeout(url, {method: 'POST', data, ...options}),
+  put: (url, data, options) => fetchWithTimeout(url, {method: 'PUT', data, ...options}),
+  delete: (url, options) => fetchWithTimeout(url, {method: 'DELETE', ...options}),
+}
 export async function getNotes() {
   try {
     const notes = await fetchWithTimeout(`${API_BASE_URL}`);
@@ -63,8 +70,30 @@ export async function getNotes() {
       error: {
         message: error.message,
         status: error.status || 500,
-        details: error.response ? await error.response.text().catch(() => null) : null,
+        details: error.response ? await error.response.text().catch(() => null) : null
       }
     }
   }
+}
+export async function getNoteById(id) {
+  try {
+      const note = await fetchWithTimeout(`${API_BASE_URL}/${id}`);
+      return {
+        success: true,
+        data: note,
+        error: null,
+      }
+    } catch (error) {
+    console.error('Erro ao buscar nota:', error);
+    return {
+      success: false,
+      data: null,
+      error: {
+        message: error.message,
+        status: error.status || 500,
+        details: error.response ? await error.response.text().catch(() => null) : null
+      }
+    }
+  }
+
 }
