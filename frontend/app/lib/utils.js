@@ -6,7 +6,7 @@ export function cn(...inputs) {
 }
 
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/notes';
+export const API_NOTE_URL = process.env.API_NOTE_URL || 'http://127.0.0.1:8000/notes';
 
 async function fetchWithTimeout(url, options = {}) {
   const {timeout = 10000, ...fetchOptions} = options;

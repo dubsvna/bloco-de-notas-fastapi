@@ -1,7 +1,8 @@
-funções CRUD restantes
+~~funções CRUD NOTAS restantes
+    getID
     post
     put
-    delete
+    delete~~
 
 formatação de created_at notaBox
 atualização em tempo real das notas
